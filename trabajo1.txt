@@ -1,0 +1,15 @@
+INT a
+INT b
+INT c
+a = 6
+b = 1
+c = 5
+c = ( b * c ) 
+SHOW c
+SHOW a
+IF ( a > c ) THEN JUMP 12
+b = ( b * a )
+a = ( a - 1 )
+IF ( a > c ) THEN JUMP 7
+SHOW b
+END
