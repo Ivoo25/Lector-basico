@@ -1,18 +1,14 @@
 #include <iostream>
 #include <cstdlib>
-#include <sstream>
 #include <cctype>
 #include <fstream>
 #include <math.h>
 #include <limits>
 #include <string>
-#include <conio.h>
 #include <iterator>
-#include <vector>
 #include <algorithm>
 #include <cstring>
 #include <list>
-#include <map>
 #include <unordered_map>
 #include <stack>
 
@@ -26,8 +22,8 @@ private:
 	typedef int Valor;
     unordered_map <Nombre, Valor> Entorno;
 	unordered_map <char, int>::iterator iterador_mapa, iterador_aux ;
-	vector<string> Script;
-	vector<string>::iterator linea_actual;
+	list<string> Script;
+	list<string>::iterator linea_actual;
 	bool ok = true;
 	bool condicionchequeada;
 	bool isnum(string valor);
@@ -41,7 +37,7 @@ public:
 	bool readFile();
 	bool ArePair(char opening, char closing);
 	bool areParanthesisBalanced(string expr);
-	bool operaciones(vector<string> Original);
+	bool operaciones(list<string> Original);
 	bool isnumS(char valor);
 	int calcular(int o1, int o2, char aux);
 };
@@ -124,7 +120,7 @@ bool AYED2019::areParanthesisBalanced(string expr){
 }
 
 
-bool AYED2019::operaciones(vector<string> Original) {
+bool AYED2019::operaciones(list<string> Original) {
 	bool cond;
 	int aux1 = 0, aux2 = 0, o2 = 0, o1 = 0, tempA = 0, tempB = 0;
 	char auxiliar;
@@ -152,20 +148,36 @@ bool AYED2019::operaciones(vector<string> Original) {
 		//for (linea_actual = Script.begin(); linea_actual != Script.end(); linea_actual++) {
 		iterador_mapa = Entorno.begin();
 		//string& cadena = *linea_actual;
-		if (cadena.size() > 8) {
-			if (cadena.at(2) == '=') {
-				if (Entorno.find(cadena.at(6)) != Entorno.end()) {
-					auxiliar = iterador_mapa->first;
-					tempA = Entorno[cadena.at(6)];
-				}
-				iterador_mapa++;
-				if (isnumS(cadena.at(10))) {
-					tempB = atoi(&cadena.at(10));
+			if (cadena.size() > 8) {
+			if (cadena.at(2) == '=' && cadena.length() < 14) {
+				if (cadena.at(4) == '(') {
+					if (Entorno.find(cadena.at(6)) != Entorno.end()) {
+						auxiliar = iterador_mapa->first;
+						tempA = Entorno[cadena.at(6)];
+					}
+					iterador_mapa++;
+					if (isnumS(cadena.at(10))) {
+						tempB = atoi(&cadena.at(10));
+					}
+					else {
+						tempB = Entorno[cadena.at(10)];
+					}
+					operacion = cadena.at(8);
 				}
 				else {
-					tempB = Entorno[cadena.at(10)];
+					if (Entorno.find(cadena.at(4)) != Entorno.end()) {
+						auxiliar = iterador_mapa->first;
+						tempA = Entorno[cadena.at(4)];
+					}
+					iterador_mapa++;
+					if (isnumS(cadena.at(8))) {
+						tempB = atoi(&cadena.at(8));
+					}
+					else {
+						tempB = Entorno[cadena.at(8)];
+					}
+					operacion = cadena.at(6);
 				}
-				operacion = cadena.at(8);
 				calcular(tempA, tempB, operacion);
 				Entorno[cadena.at(0)] = calcular(tempA, tempB, operacion);
 			}
@@ -206,18 +218,16 @@ bool AYED2019::operaciones(vector<string> Original) {
 					string str3 = cadena.substr(pos);
 					iterador_mapa = Entorno.begin();
 					if (str3.find("SHOW")) {
-						for (int i = 0; i < str3.size(); i++) {
-							if (Entorno.find(cadena.at(5)) != Entorno.end()) {
-								cout << "Showing: " << Entorno[cadena.at(5)] << endl;
+						if (Entorno.find(cadena.at(23)) != Entorno.end()) {
+								cout << "Showing: " << Entorno[cadena.at(23)] << endl;
 								break;
-							}
 						}
 					}
 					if (str3.find("JUMP")) {
-						if (isnumS(cadena.at(5))) {
-							int numeropos = (atoi(&cadena.at(5)));
+						if (isnumS(cadena.at(23))) {
+							int numeropos = (atoi(&str3.at(23)));
 							linea_actual = Script.begin();
-							for (int i = 0; i < numeropos - 2; i++) {
+							for (int i = 0; i < numeropos -1 ; i++) {
 								linea_actual++;
 							}
 
